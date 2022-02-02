@@ -31,7 +31,8 @@ class MainActivity : AppCompatActivity() {
         textView = findViewById(R.id.tv_result)
 
         button.setOnClickListener {
-            textView.text = changeColorUrl(editText.text.toString())
+            val text = editText.text.toString()
+            textView.text = changeColorHashtag(text, changeColorUrl(text))
         }
     }
 
@@ -48,8 +49,43 @@ class MainActivity : AppCompatActivity() {
 
         val spannable: Spannable = SpannableString(text)
         for ((k, v) in map) {
-            spannable.setSpan(ForegroundColorSpan(Color.BLUE), k, v, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            spannable.setSpan(
+                ForegroundColorSpan(Color.BLUE),
+                k,
+                v,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
         }
+        return spannable
+    }
+
+    private fun changeColorHashtag(text: String, spannable: Spannable): Spannable {
+
+        val map = HashMap<Int, Int>();
+        val list: List<String> = text.split(" ")
+
+        for (i in text.indices) {
+            if (text[i] == '#' && (i == 0 || text[i - 1] == ' ')) {
+                if (i + 1 != text.length && text[i + 1] != ' ')
+
+                    for (j in i until text.length) {
+                        if (text[j] == ' ' || j == text.length - 1) {
+                            map[i] = j + 1
+                            break
+                        }
+                    }
+            }
+        }
+
+        for ((k, v) in map) {
+            spannable.setSpan(
+                ForegroundColorSpan(Color.GREEN),
+                k,
+                v,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+        }
+
         return spannable
     }
 
